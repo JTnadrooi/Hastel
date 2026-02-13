@@ -15,7 +15,7 @@ namespace Hastel.Server.Tests
         {
             Uri uri = new Uri("http://localhost/api/test?param1=value1");
 
-            uri.GetAsCommand("GET").Should().Be("get api-test --param1 value1");
+            uri.GetAsCommand("GET").Should().Be("api test_GET --param1 value1");
         }
 
         [TestMethod]
@@ -23,7 +23,7 @@ namespace Hastel.Server.Tests
         {
             Uri uri = new Uri("http://localhost/api/test");
 
-            uri.GetAsCommand("GET").Should().Be("get api-test");
+            uri.GetAsCommand("GET").Should().Be("api test_GET");
         }
 
         [TestMethod]
@@ -31,7 +31,7 @@ namespace Hastel.Server.Tests
         {
             Uri uri = new Uri("http://localhost/api/test?param1=value1&param2=value2a&param2=value2b");
 
-            uri.GetAsCommand("GET").Should().Be("get api-test --param1 value1 --param2 value2a value2b");
+            uri.GetAsCommand("GET").Should().Be("api test_GET --param1 value1 --param2 value2a value2b");
         }
 
         [TestMethod]

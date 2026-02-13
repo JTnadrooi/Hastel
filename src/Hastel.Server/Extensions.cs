@@ -19,7 +19,7 @@ namespace Hastel.Server
 
         public static string GetAsCommand(this Uri url, string method)
         {
-            string path = method.ToLower() + " " + url.AbsolutePath.Trim('/').Replace("/", "-");
+            string path = url.AbsolutePath.Trim('/').Replace("/", " ") + "_" + method.ToLower();
 
             if (path.Length == method.Length + 1) throw new ArgumentException("Uri has no target.", nameof(url));
 

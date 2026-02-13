@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 
 namespace Hastel.Server.CommandProviders
 {
-    public class GetCommandProvider : CommandGroup // for get requests
+    public class TestCommandProvider : CommandGroup // for get requests
     {
-        public GetCommandProvider() : base("get", null)
+        public TestCommandProvider() : base("test", null)
         {
 
         }
 
         [Command(".")]
-        public string Capitalize(string word)
+        public string Capitalize_GET(string word)
         {
             return word.ToUpper();
         }
