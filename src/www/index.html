@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Hastel Server Test</title>
+</head>
+
+<body>
+    <h1>Test Hastel Server</h1>
+    <button onclick="sendRequest()">Send Request</button>
+
+    <p id="response"></p>
+
+    <script>
+        function sendRequest() {
+            fetch("http://localhost:5000/")
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById("response").innerText = data;
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                });
+        }
+    </script>
+</body>
+
+</html>

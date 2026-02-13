@@ -1,0 +1,10 @@
+.*
+!.gitignore
+!.gitattributes
+!.*version
+
+bin/
+obj/
+build/
+**/Content.mgcb
+pipeline-references/
