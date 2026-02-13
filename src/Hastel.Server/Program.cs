@@ -4,12 +4,15 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Web;
 
 namespace Hastel.Server
 {
     public static class Program
     {
+        public const int Latency = 500; // ms.
+
         public static void Main(string[] args)
         {
             using HttpListener listener = new HttpListener();
@@ -23,6 +26,8 @@ namespace Hastel.Server
 
             while (true)
             {
+                Thread.Sleep(Latency);
+
                 HttpListenerContext context = listener.GetContext();
                 HttpListenerRequest request = context.Request;
                 HttpListenerResponse response = context.Response;
