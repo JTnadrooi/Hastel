@@ -2,24 +2,46 @@
 <html>
 
 <head>
-    <title>Hastel Server Test</title>
+    <title>Hastel</title>
 </head>
 
 <body>
-    <h1>Test Hastel Server</h1>
+    <h1>Hastel</h1>
+
+    <input type="text" id="wordInput" placeholder="Enter a word">
     <button onclick="sendRequest()">Send Request</button>
 
     <p id="response"></p>
 
     <script>
         function sendRequest() {
-            fetch("http://localhost:5000/")
-                .then(response => response.text())
+            const word = document.getElementById("wordInput").value.trim();
+            if (!word) {
+                document.getElementById("response").innerText = "Please enter a word.";
+                return;
+            }
+
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => {
+                controller.abort();
+            }, 3000);
+
+            fetch(`http://localhost:5000/capitalize?word=${encodeURIComponent(word)}`, { signal: controller.signal })
+                .then(response => {
+                    clearTimeout(timeoutId);
+                    if (!response.ok) throw new Error(`Server error: ${response.status}`);
+                    return response.text();
+                })
                 .then(data => {
                     document.getElementById("response").innerText = data;
                 })
                 .catch(error => {
-                    console.error("Error:", error);
+                    if (error.name === "AbortError") {
+                        document.getElementById("response").innerText = "Request timed out after 3 seconds.";
+                    } else {
+                        document.getElementById("response").innerText = "Error: " + error.message;
+                        console.error("Error:", error);
+                    }
                 });
         }
     </script>

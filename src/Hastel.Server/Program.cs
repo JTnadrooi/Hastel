@@ -1,4 +1,5 @@
-﻿using AsitLib.Diagnostics;
+﻿using AsitLib.CommandLine;
+using AsitLib.Diagnostics;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -11,12 +12,12 @@ namespace Hastel.Server
 {
     public static class Program
     {
-        public const int Latency = 500; // ms.
-
         public static void Main(string[] args)
         {
             using HttpListener listener = new HttpListener();
             IRichLogger logger = new RichLogger();
+            CommandEngine engine = new CommandEngine();
+            engine.Populate();
 
             listener.Prefixes.Add("http://localhost:5000/");
             listener.Start();
@@ -26,15 +27,13 @@ namespace Hastel.Server
 
             while (true)
             {
-                Thread.Sleep(Latency);
-
                 HttpListenerContext context = listener.GetContext();
                 HttpListenerRequest request = context.Request;
                 HttpListenerResponse response = context.Response;
 
                 logger.Log($"received {request.HttpMethod} request for {request.Url}");
 
-                string responseString = "Ahoy from Hastel Server!";
+                string responseString = engine.Execute(request.GetAsCommand()).ToOutputString();
                 byte[] buffer = Encoding.UTF8.GetBytes(responseString);
 
                 response.AddHeader("Access-Control-Allow-Origin", "*");
