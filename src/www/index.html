@@ -16,32 +16,29 @@
     <script>
         function sendRequest() {
             const word = document.getElementById("wordInput").value.trim();
+            const responseElement = document.getElementById("response");
+
             if (!word) {
-                document.getElementById("response").innerText = "Please enter a word.";
+                responseElement.innerText = "Please enter a word.";
                 return;
             }
 
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => {
-                controller.abort();
-            }, 3000);
+            const url = new URL("http://localhost:5000/test/capitalize");
+            url.searchParams.append("word", word);
 
-            fetch(`http://localhost:5000/capitalize?word=${encodeURIComponent(word)}`, { signal: controller.signal })
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 3000);
+
+            fetch(url.toString(), { signal: controller.signal })
                 .then(response => {
                     clearTimeout(timeoutId);
                     if (!response.ok) throw new Error(`Server error: ${response.status}`);
                     return response.text();
                 })
-                .then(data => {
-                    document.getElementById("response").innerText = data;
-                })
+                .then(data => responseElement.innerText = data)
                 .catch(error => {
-                    if (error.name === "AbortError") {
-                        document.getElementById("response").innerText = "Request timed out after 3 seconds.";
-                    } else {
-                        document.getElementById("response").innerText = "Error: " + error.message;
-                        console.error("Error:", error);
-                    }
+                    responseElement.innerText = "Error: " + error.message;
+                    console.error(error);
                 });
         }
     </script>
