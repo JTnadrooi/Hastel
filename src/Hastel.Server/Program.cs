@@ -1,19 +1,22 @@
-﻿using System;
+﻿using AsitLib.Diagnostics;
+using System;
 using System.Net;
 using System.Text;
 
 namespace Hastel.Server
 {
-    internal class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             using HttpListener listener = new HttpListener();
+            IRichLogger logger = new RichLogger();
+
             listener.Prefixes.Add("http://localhost:5000/");
             listener.Start();
 
-            Console.WriteLine("Server running at http://localhost:5000/");
-            Console.WriteLine("Press Ctrl+C to stop.");
+            logger.Log("server running at http://localhost:5000/");
+            logger.Log("press Ctrl+C to stop.");
 
             while (true)
             {
@@ -21,9 +24,9 @@ namespace Hastel.Server
                 HttpListenerRequest request = context.Request;
                 HttpListenerResponse response = context.Response;
 
-                Console.WriteLine($"Received {request.HttpMethod} request for {request.Url}");
+                logger.Log($"received {request.HttpMethod} request for {request.Url}");
 
-                string responseString = "Hello from Hastel Server!";
+                string responseString = "Ahoy from Hastel Server!";
                 byte[] buffer = Encoding.UTF8.GetBytes(responseString);
 
                 response.AddHeader("Access-Control-Allow-Origin", "*");
