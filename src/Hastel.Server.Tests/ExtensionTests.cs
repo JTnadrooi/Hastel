@@ -3,6 +3,7 @@ using Moq;
 using System;
 using System.Net;
 using Hastel.Server;
+using static AwesomeAssertions.FluentActions;
 
 namespace Hastel.Server.Tests
 {
@@ -31,6 +32,14 @@ namespace Hastel.Server.Tests
             Uri uri = new Uri("http://localhost/api/test?param1=value1&param2=value2a&param2=value2b");
 
             uri.GetAsCommand("GET").Should().Be("get_api-test --param1 value1 --param2 value2a value2b");
+        }
+
+        [TestMethod]
+        public void GetAsCommand_UriWithoutPath_ThrowsEx()
+        {
+            Uri uri = new Uri("http://localhost/");
+
+            Invoking(() => uri.GetAsCommand("GET")).Should().Throw<ArgumentException>();
         }
     }
 }
