@@ -40,7 +40,7 @@ namespace Hastel.Server
 
                 logger.Log($"received {request.HttpMethod} request for {request.Url}");
 
-                string responseString = engine.Execute(request.GetAsCommand()).ToOutputString();
+                string responseString = engine.Execute(request.AsCommand()).ToOutputString();
                 byte[] buffer = Encoding.UTF8.GetBytes(responseString);
 
                 response.AddHeader("Access-Control-Allow-Origin", "*");

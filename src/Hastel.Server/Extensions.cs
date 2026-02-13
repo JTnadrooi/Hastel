@@ -12,12 +12,12 @@ namespace Hastel.Server
 {
     public static class Extensions // Hastel does not qualify for per type extension classes yet
     {
-        public static string GetAsCommand(this HttpListenerRequest request)
+        public static string AsCommand(this HttpListenerRequest request)
         {
-            return GetAsCommand(request.Url!, request.HttpMethod);
+            return AsCommand(request.Url!, request.HttpMethod);
         }
 
-        public static string GetAsCommand(this Uri url, string method)
+        public static string AsCommand(this Uri url, string method)
         {
             string path = url.AbsolutePath.Trim('/').Replace("/", " ") + "_" + method.ToLower();
 
