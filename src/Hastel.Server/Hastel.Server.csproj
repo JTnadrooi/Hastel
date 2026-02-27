@@ -13,6 +13,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <PackageReference Include="MySqlConnector" Version="2.5.0" />
+	  <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<Reference Include="AsitLib">
 			<HintPath>..\..\lib\AsitLib.dll</HintPath>
 		</Reference>

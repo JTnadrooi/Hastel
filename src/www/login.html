@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Hastel - Login</title>
+</head>
+
+<body>
+    <h1>Hastel</h1>
+
+    <input type="text" id="usernameInput" placeholder="Your username">
+    <input type="password" id="passwordInput" placeholder="Your password">
+    <button onclick="login()">Login</button>
+
+    <p id="response"></p>
+
+    <script>
+        function login() {
+            const username = document.getElementById("usernameInput").value.trim();
+            const password = document.getElementById("passwordInput").value;
+            const responseElement = document.getElementById("response");
+
+            if (!username || !password) {
+                responseElement.innerText = "Please enter both username and password.";
+                return;
+            }
+
+            const loginData = {
+                username: username,
+                password: password
+            };
+
+            fetch("http://127.0.0.1:5000/auth/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: 'include',
+                body: JSON.stringify(loginData),
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        if (response.status === 401) {
+                            throw new Error("Invalid username or password");
+                        }
+                        throw new Error(`Server error: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    responseElement.innerText = "Login successful!";
+
+                    if (data.token) {
+                        sessionStorage.setItem("authToken", data.token);
+                        sessionStorage.setItem("userData", JSON.stringify(data.user));
+                    }
+
+                    console.log("Login successful:", data);
+                })
+                .catch(error => {
+                    responseElement.innerText = "Error: " + error.message;
+                    console.error("Login error:", error);
+                });
+        }
+    </script>
+
+    <input type="text" id="wordInput" placeholder="Enter a word">
+    <button onclick="sendRequest()">Send Request</button>
+
+    <p id="response"></p>
+
+    <script>
+        function sendRequest() {
+            const word = document.getElementById("wordInput").value.trim();
+            const responseElement = document.getElementById("response");
+
+            if (!word) {
+                responseElement.innerText = "Please enter a word.";
+                return;
+            }
+
+            const url = new URL("http://127.0.0.1:5000/test/capitalize");
+            url.searchParams.append("word", word);
+
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 3000);
+
+            fetch(url.toString(), {
+                credentials: 'include',
+            })
+                .then(response => {
+                    clearTimeout(timeoutId);
+                    if (!response.ok) throw new Error(`Server error: ${response.status}`);
+                    return response.text();
+                })
+                .then(data => responseElement.innerText = data)
+                .catch(error => {
+                    responseElement.innerText = "Error: " + error.message;
+                    console.error(error);
+                });
+        }
+    </script>
+</body>
+
+</html>
