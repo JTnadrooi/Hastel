@@ -19,7 +19,14 @@ namespace Hastel.Server
 
         public static User FromToken(string token)
         {
-            return new User(int.Parse(token.Split("id").Last()), string.Empty, string.Empty);
+            int userId = int.Parse(token.Split("id").Last());
+
+            User? user = QueryHelper.QuerySingle(
+                "SELECT userid, username, password FROM users WHERE userid = @id",
+                User.Map,
+                new MySqlParameter("@id", userId)
+            );
+            return user;
         }
     }
 }
