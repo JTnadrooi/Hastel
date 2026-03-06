@@ -116,13 +116,17 @@ namespace Hastel.Server
                         commandResponse = CommandWebResponse.FromString(commandResult.ToOutputString());
                     }
                 }
-                catch (WebException)
+                //catch (Exception)
+                //{
+                //    commandResponse = CommandWebResponse.FromStatusCode(HttpStatusCode.InternalServerError);
+                //}
+                catch (WebException webEx)
                 {
-                    commandResponse = CommandWebResponse.FromStatusCode(HttpStatusCode.InternalServerError);
+                    commandResponse = CommandWebResponse.FromException(webEx);
                 }
-                catch (TargetInvocationException ex) when (ex.InnerException is WebException)
+                catch (TargetInvocationException ex) when (ex.InnerException is WebException webEx)
                 {
-                    commandResponse = CommandWebResponse.FromStatusCode(HttpStatusCode.InternalServerError);
+                    commandResponse = CommandWebResponse.FromException(webEx);
                 }
 
                 buffer = Encoding.UTF8.GetBytes(commandResponse.String);

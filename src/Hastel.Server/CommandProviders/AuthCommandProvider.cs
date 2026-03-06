@@ -22,6 +22,22 @@ namespace Hastel.Server.CommandProviders
 
         public static CommandWebResponse FromString(string str)
             => new CommandWebResponse() { String = str };
+
+        public static CommandWebResponse FromException(Exception exception)
+        {
+            return exception switch
+            {
+                WebException webException => new CommandWebResponse()
+                {
+                    StatusCode = webException.StatusCode,
+                    String = webException.Message,
+                },
+                _ => new CommandWebResponse()
+                {
+                    StatusCode = HttpStatusCode.InternalServerError,
+                },
+            };
+        }
     }
 
     public class AuthCommandProvider : CommandGroup
