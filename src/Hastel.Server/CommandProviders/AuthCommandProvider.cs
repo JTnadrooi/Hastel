@@ -2,7 +2,6 @@
 using MySqlConnector;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -11,35 +10,6 @@ using System.Threading.Tasks;
 
 namespace Hastel.Server.CommandProviders
 {
-    public class CommandWebResponse
-    {
-        public HttpStatusCode StatusCode { get; init; }
-        public string String { get; init; } = string.Empty;
-        public Cookie[] Cookies { get; init; } = Array.Empty<Cookie>();
-
-        public static CommandWebResponse FromStatusCode(HttpStatusCode statusCode)
-            => new CommandWebResponse() { StatusCode = statusCode };
-
-        public static CommandWebResponse FromString(string str)
-            => new CommandWebResponse() { String = str };
-
-        public static CommandWebResponse FromException(Exception exception)
-        {
-            return exception switch
-            {
-                WebException webException => new CommandWebResponse()
-                {
-                    StatusCode = webException.StatusCode,
-                    String = webException.Message,
-                },
-                _ => new CommandWebResponse()
-                {
-                    StatusCode = HttpStatusCode.InternalServerError,
-                },
-            };
-        }
-    }
-
     public class AuthCommandProvider : CommandGroup
     {
         public AuthCommandProvider() : base("auth")
