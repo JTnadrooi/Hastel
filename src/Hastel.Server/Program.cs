@@ -34,7 +34,20 @@ namespace Hastel.Server
             logger.Log($">connecting to db.");
             using MySqlConnection connection = new MySqlConnection("Server=127.0.0.1;Port=3306;Database=hastel;User=root;Password=;");
             QueryHelper.Connection = connection;
+            bool isConnected = false;
+            while (!isConnected)
+            {
+                try
+                {
             connection.Open();
+                    isConnected = true;
+                }
+                catch (Exception e)
+                {
+                    logger.Error(e.Message);
+                    logger.Log($"retrying.");
+                }
+            }
             logger.Log($"<connected to db.");
 
             string query = "SELECT * FROM users";
