@@ -6,5 +6,4 @@
 bin/
 obj/
 build/
-**/Content.mgcb
-pipeline-references/
+TestResults/
