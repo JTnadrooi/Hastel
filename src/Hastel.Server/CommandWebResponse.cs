@@ -5,7 +5,7 @@ namespace Hastel.Server
 {
     public class CommandWebResponse
     {
-        public HttpStatusCode StatusCode { get; init; }
+        public HttpStatusCode StatusCode { get; init; } = HttpStatusCode.OK;
         public string String { get; init; } = string.Empty;
         public Cookie[] Cookies { get; init; } = Array.Empty<Cookie>();
 
