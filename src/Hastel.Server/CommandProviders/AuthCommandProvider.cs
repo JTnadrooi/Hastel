@@ -14,11 +14,14 @@ namespace Hastel.Server.CommandProviders
     public class CommandWebResponse
     {
         public HttpStatusCode StatusCode { get; init; }
-        public string JSON { get; init; } = string.Empty;
+        public string String { get; init; } = string.Empty;
         public Cookie[] Cookies { get; init; } = Array.Empty<Cookie>();
 
         public static CommandWebResponse FromStatusCode(HttpStatusCode statusCode)
             => new CommandWebResponse() { StatusCode = statusCode };
+
+        public static CommandWebResponse FromString(string str)
+            => new CommandWebResponse() { String = str };
     }
 
     public class AuthCommandProvider : CommandGroup
@@ -39,7 +42,7 @@ namespace Hastel.Server.CommandProviders
                 return new CommandWebResponse()
                 {
                     StatusCode = HttpStatusCode.OK,
-                    JSON = JsonConvert.SerializeObject(new { token = token }),
+                    String = JsonConvert.SerializeObject(new { token = token }),
                     Cookies = [new Cookie("authToken", token)
                     {
                         HttpOnly = true,

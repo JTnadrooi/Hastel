@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Web;
@@ -39,7 +40,7 @@ namespace Hastel.Server
             {
                 try
                 {
-            connection.Open();
+                    connection.Open();
                     isConnected = true;
                 }
                 catch (Exception e)
@@ -92,21 +93,43 @@ namespace Hastel.Server
                     continue;
                 }
 
-                CommandResult commandResult = engine.Execute(request.AsCommand());
                 byte[] buffer;
-
-                if (commandResult.IsVoid)
-                    buffer = Array.Empty<byte>();
-                else if (commandResult.Value is CommandWebResponse commandResponse)
+                CommandResult commandResult;
+                CommandWebResponse commandResponse;
+                try
                 {
-                    buffer = Encoding.UTF8.GetBytes(commandResponse.JSON);
-                    response.StatusCode = (int)commandResponse.StatusCode;
+                    commandResult = engine.Execute(request.AsCommand());
 
-                    foreach (Cookie cookie in commandResponse.Cookies)
-                        response.Cookies.Add(cookie);
+                    if (commandResult.IsVoid) commandResponse = new CommandWebResponse();
+                    else if (commandResult.Value is CommandWebResponse)
+                    {
+                        commandResponse = (CommandWebResponse)commandResult.Value;
+
+                        buffer = Encoding.UTF8.GetBytes(commandResponse.String);
+                        response.StatusCode = (int)commandResponse.StatusCode;
+
+                        foreach (Cookie cookie in commandResponse.Cookies)
+                            response.Cookies.Add(cookie);
+                    }
+                    else
+                    {
+                        commandResponse = CommandWebResponse.FromString(commandResult.ToOutputString());
+                    }
                 }
-                else
-                    buffer = Encoding.UTF8.GetBytes(commandResult.ToOutputString());
+                catch (WebException)
+                {
+                    commandResponse = CommandWebResponse.FromStatusCode(HttpStatusCode.InternalServerError);
+                }
+                catch (TargetInvocationException ex) when (ex.InnerException is WebException)
+                {
+                    commandResponse = CommandWebResponse.FromStatusCode(HttpStatusCode.InternalServerError);
+                }
+
+                buffer = Encoding.UTF8.GetBytes(commandResponse.String);
+                response.StatusCode = (int)commandResponse.StatusCode;
+
+                foreach (Cookie cookie in commandResponse.Cookies)
+                    response.Cookies.Add(cookie);
 
                 response.AddHeader("Access-Control-Allow-Origin", frontendOrigin);
                 response.AddHeader("Access-Control-Allow-Credentials", "true");
@@ -115,8 +138,12 @@ namespace Hastel.Server
                 response.OutputStream.Write(buffer, 0, buffer.Length);
                 response.OutputStream.Close();
 
-                logger.Log($"<responded with {(HttpStatusCode)response.StatusCode}.");
-                Console.WriteLine($"```\n{Encoding.UTF8.GetString(buffer)}\n```");
+                logger.Log($"<responded with {(HttpStatusCode)response.StatusCode}." + (buffer.Length == 0 ? " no body." : string.Empty));
+
+                if (buffer.Length > 0)
+                {
+                    Console.WriteLine($"```\n{Encoding.UTF8.GetString(buffer)}\n```");
+                }
             }
         }
     }
