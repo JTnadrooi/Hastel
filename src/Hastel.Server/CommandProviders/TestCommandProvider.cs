@@ -17,6 +17,8 @@ namespace Hastel.Server.CommandProviders
         [Command(".")]
         public string Capitalize_GET(string word)
         {
+            if (Program.CurrentUser is null) throw new WebException("User is not logged in.");
+
             return word.ToUpper();
         }
     }
