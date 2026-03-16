@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using AsitLib.CommandLine;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,6 @@ namespace Hastel.Server
 {
     public static class Extensions // Hastel does not qualify for per type extension classes yet
     {
-
         public static string AsCommand(this HttpListenerRequest request)
         {
             return AsCommand(request.Url!, request.HttpMethod, request);
@@ -42,7 +42,7 @@ namespace Hastel.Server
                 var values = query.GetValues(key);
                 if (values is null || values.Length == 0) continue;
 
-                args.Add($"--{key} {string.Join(" ", values)}");
+                args.Add($"--{ParseHelpers.GetSignature(key)} {string.Join(" ", values)}");
             }
 
             // -------------------------
@@ -65,7 +65,7 @@ namespace Hastel.Server
                         var obj = JObject.Parse(body);
 
                         foreach (var prop in obj.Properties())
-                            args.Add($"--{prop.Name} {prop.Value}");
+                            args.Add($"--{ParseHelpers.GetSignature(prop.Name)} {prop.Value}");
                     }
                     // form-urlencoded
                     else if (contentType?.Contains("application/x-www-form-urlencoded") is true)
@@ -75,7 +75,7 @@ namespace Hastel.Server
                         foreach (string? key in form.AllKeys)
                         {
                             if (key is null) continue;
-                            args.Add($"--{key} {form[key]}");
+                            args.Add($"--{ParseHelpers.GetSignature(key)} {form[key]}");
                         }
                     }
                 }
