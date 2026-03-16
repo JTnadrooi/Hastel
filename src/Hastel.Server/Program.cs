@@ -78,7 +78,7 @@ namespace Hastel.Server
                 if (CurrentUser is not null)
                     logger.Log($"user logged in as '{CurrentUser.Username}'.");
 
-                if (request.HttpMethod == "OPTIONS")
+                if (request.HttpMethod == "OPTIONS") // preflight req.
                 {
                     logger.Log($">preflight request.");
 
@@ -93,12 +93,15 @@ namespace Hastel.Server
                     continue;
                 }
 
-                byte[] buffer;
+                string command = request.AsCommand();
+                logger.Log($"request as command '{command}'.");
+
+                byte[] buffer; // buffer to send back to frontend
                 CommandResult commandResult;
                 CommandWebResponse commandResponse;
                 try
                 {
-                    commandResult = engine.Execute(request.AsCommand());
+                    commandResult = engine.Execute(command);
 
                     if (commandResult.IsVoid) commandResponse = new CommandWebResponse();
                     else if (commandResult.Value is CommandWebResponse)
@@ -120,14 +123,16 @@ namespace Hastel.Server
                 //{
                 //    commandResponse = CommandWebResponse.FromStatusCode(HttpStatusCode.InternalServerError);
                 //}
-                catch (WebException webEx)
+                catch (WebException webEx) // catch web exceptions and...
                 {
                     commandResponse = CommandWebResponse.FromException(webEx);
                 }
-                catch (TargetInvocationException ex) when (ex.InnerException is WebException webEx)
+                catch (TargetInvocationException ex) when (ex.InnerException is WebException webEx) // web exceptions in other exceptions.
                 {
                     commandResponse = CommandWebResponse.FromException(webEx);
                 }
+
+                #region RESPONSE_PARSING
 
                 buffer = Encoding.UTF8.GetBytes(commandResponse.String);
                 response.StatusCode = (int)commandResponse.StatusCode;
@@ -142,9 +147,11 @@ namespace Hastel.Server
                 response.OutputStream.Write(buffer, 0, buffer.Length);
                 response.OutputStream.Close();
 
+                #endregion
+
                 logger.Log($"<responded with {(HttpStatusCode)response.StatusCode}." + (buffer.Length == 0 ? " no body." : string.Empty));
 
-                if (buffer.Length > 0)
+                if (buffer.Length > 0) // logging only.
                 {
                     Console.WriteLine($"```\n{Encoding.UTF8.GetString(buffer)}\n```");
                 }
