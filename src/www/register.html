@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Hastel - Register</title>
+        <link rel="stylesheet" href="css/style.css" />
+    </head>
+
+    <body>
+        <h1>Hastel</h1>
+
+        <div>
+            <input type="text" id="usernameInput" placeholder="Your username" />
+        </div>
+        <div>
+            <input
+                type="password"
+                id="passwordInput"
+                placeholder="Your password"
+            />
+        </div>
+        <div>
+            <button onclick="handleRegister()">Register</button>
+        </div>
+        <div>
+            <a href="login.html">Go back to login</a>
+        </div>
+
+        <p id="registerResponse"></p>
+
+        <script src="js/shared.js"></script>
+        <script src="js/register.js"></script>
+    </body>
+</html>

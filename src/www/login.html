@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Hastel - Login</title>
+        <link rel="stylesheet" href="css/style.css" />
+    </head>
+
+    <body>
+        <h1>Hastel</h1>
+
+        <div>
+            <input type="text" id="usernameInput" placeholder="Your username" />
+        </div>
+        <div>
+            <input
+                type="password"
+                id="passwordInput"
+                placeholder="Your password"
+            />
+        </div>
+        <div>
+            <button onclick="handleLogin()">Login</button>
+        </div>
+        <div>
+            <a href="register.html">No account yet? Register</a>
+        </div>
+
+        <p id="loginResponse"></p>
+
+        <script src="js/shared.js"></script>
+        <script src="js/login.js"></script>
+    </body>
+</html>

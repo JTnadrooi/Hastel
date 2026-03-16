@@ -13,10 +13,6 @@ async function handleLogin() {
             body: JSON.stringify({ username, password })
         });
 
-        if (!data.token) {
-            throw new Error("Invalid response from server");
-        }
-
         const user = { username: username };
 
         Auth.setSession(data.token, user);

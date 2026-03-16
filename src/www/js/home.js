@@ -1,11 +1,5 @@
 function displayUserInfo() {
-    if (!Auth.requireAuth()) return;
-
     const user = Auth.getUser();
-    if (!user) {
-        window.location.href = "index.html";
-        return;
-    }
 
     $("userInfo").innerHTML = `
         <p>Logged in as: <strong>${user.username || 'Unknown'}</strong></p>
@@ -17,8 +11,8 @@ async function handleLogout() {
         Auth.clearSession();
         UI.setResponse("logoutResponse", "Logout successful!");
 
-        setTimeout(() => {
-            window.location.href = "index.html";
+        setTimeout(() => { // give user time to read the response.
+            window.location.href = "login.html";
         }, 1000);
 
     } catch (error) {
@@ -29,5 +23,5 @@ async function handleLogout() {
 if (Auth.isAuthenticated()) {
     displayUserInfo();
 } else {
-    window.location.href = "index.html";
+    window.location.href = "login.html";
 }

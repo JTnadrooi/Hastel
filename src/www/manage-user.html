@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Hastel - Manage user</title>
+        <link rel="stylesheet" href="css/style.css" />
+    </head>
+
+    <body>
+        <h1>Manage user data</h1>
+
+        <section>
+            <h2>User Information</h2>
+            <div id="userInfo"></div>
+            <div>
+                <button onclick="handleLogout()">Logout</button>
+            </div>
+            <p id="logoutResponse"></p>
+        </section>
+
+        <hr />
+
+        <section>
+            <h2>Account Management</h2>
+
+            <div>
+                <h3>Delete Account</h3>
+                <button onclick="handleUserDelete()" style="color: red">
+                    Delete user
+                </button>
+                <p id="deleteUserResponse"></p>
+                <p><small>Warning: This action cannot be undone</small></p>
+            </div>
+
+            <div>
+                <h3>Change Password</h3>
+                <div>
+                    <div>
+                        <label for="newPassword">New password:</label>
+                        <br />
+                        <input
+                            type="password"
+                            id="newPassword"
+                            name="newPassword"
+                            placeholder="Enter new password"
+                        />
+                    </div>
+
+                    <div>
+                        <label for="confirmPassword"
+                            >Confirm new password:</label
+                        >
+                        <br />
+                        <input
+                            type="password"
+                            id="confirmPassword"
+                            name="confirmPassword"
+                            placeholder="Repeat new password"
+                        />
+                    </div>
+
+                    <div>
+                        <button type="button" onclick="handleChangePassword()">
+                            Change password
+                        </button>
+                        <p id="changePasswordResponse"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <script src="js/shared.js"></script>
+        <script src="js/manage-user.js"></script>
+    </body>
+</html>

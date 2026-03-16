@@ -1,21 +1,25 @@
 <!DOCTYPE html>
 <html>
+    <head>
+        <title>Hastel - Home</title>
+        <link rel="stylesheet" href="css/style.css" />
+    </head>
 
-<head>
-    <title>Hastel - Home</title>
-</head>
+    <body>
+        <h1>Welcome to Hastel</h1>
 
-<body>
-    <h1>Welcome to Hastel</h1>
+        <div id="userInfo"></div>
 
-    <div id="userInfo"></div>
+        <div>
+            <button onclick="handleLogout()">Logout</button>
+        </div>
+        <div>
+            <a href="manage-user.html">Manage user</a>
+        </div>
 
-    <button onclick="handleLogout()">Logout</button>
+        <p id="logoutResponse"></p>
 
-    <p id="logoutResponse"></p>
-
-    <script src="js/shared.js"></script>
-    <script src="js/home.js"></script>
-</body>
-
+        <script src="js/shared.js"></script>
+        <script src="js/home.js"></script>
+    </body>
 </html>
