@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace Hastel.Server
 {
+    /// <summary>
+    /// Represents an <see cref="Exception"/> to be send to the frontend.
+    /// </summary>
     public class WebException : Exception
     {
         public HttpStatusCode StatusCode { get; }
