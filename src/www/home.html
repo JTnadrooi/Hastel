@@ -3,21 +3,64 @@
     <head>
         <title>Hastel - Home</title>
         <link rel="stylesheet" href="css/style.css" />
+        <style>
+            #output {
+                user-select: none;
+                pointer-events: none;
+            }
+        </style>
     </head>
 
     <body>
         <h1>Welcome to Hastel</h1>
 
-        <div id="userInfo"></div>
+        <section>
+            <h2>User Information</h2>
+            <div id="userInfo"></div>
+        </section>
 
-        <div>
-            <button onclick="handleLogout()">Logout</button>
-        </div>
-        <div>
-            <a href="manage-user.html">Manage user</a>
-        </div>
+        <hr />
 
-        <p id="logoutResponse"></p>
+        <section>
+            <h2>Spellscript Parser</h2>
+
+            <div>
+                <h3>Input</h3>
+                <textarea
+                    id="input"
+                    rows="12"
+                    cols="80"
+                    placeholder="Enter your text here..."
+                ></textarea>
+            </div>
+
+            <div>
+                <h3>Output</h3>
+                <p><small>This field is read-only.</small></p>
+                <textarea
+                    id="output"
+                    rows="12"
+                    cols="80"
+                    readonly
+                    placeholder="Results will appear here..."
+                ></textarea>
+            </div>
+        </section>
+
+        <hr />
+
+        <section>
+            <h2>Account</h2>
+            <div>
+                <div>
+                    <button onclick="handleLogout()">Logout</button>
+                </div>
+                <div>
+                    <a href="manage-user.html">Manage user</a>
+                </div>
+            </div>
+            <p id="logoutResponse"></p>
+        </section>
 
         <script src="js/shared.js"></script>
         <script src="js/home.js"></script>
