@@ -117,6 +117,21 @@ async function saveScript() {
     }
 
     try {
+        const scripts = await API.request("/scripts/list", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username }),
+            expectJson: true
+        });
+
+        if (scripts.includes(name)) {
+            const userConfirmed = confirm(`A script named "${name}" already exists. Do you want to overwrite it?`);
+            if (!userConfirmed) {
+                UI.setResponse("scriptActionResponse", "Save cancelled.");
+                return;
+            }
+        }
+
         const data = await API.request("/scripts/save-script", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
