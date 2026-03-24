@@ -29,6 +29,20 @@ namespace Hastel.Server
         }
 
         /// <summary>
+        /// Executes a query and returns the first column of the first row, cast to type T.
+        /// </summary>
+        public static T ExecuteScalar<T>(string query, params MySqlParameter[] parameters)
+        {
+            using MySqlCommand cmd = CreateCommand(query, parameters);
+            object? result = cmd.ExecuteScalar();
+
+            if (result is null || result == DBNull.Value)
+                return default!;
+
+            return (T)Convert.ChangeType(result, typeof(T));
+        }
+
+        /// <summary>
         /// Executes a query and invokes the callback for each row read.
         /// </summary>
         public static void Read(string query, Action<MySqlDataReader> onRead, params MySqlParameter[] parameters)

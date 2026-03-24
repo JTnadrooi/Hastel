@@ -56,11 +56,9 @@ namespace Hastel.Server.CommandProviders
 
             string insertQuery = "INSERT INTO users (username, password) VALUES (@username, @password); SELECT LAST_INSERT_ID();";
 
-            using MySqlCommand cmd = new MySqlCommand(insertQuery, QueryHelper.Connection);
-            cmd.Parameters.AddWithValue("@username", username);
-            cmd.Parameters.AddWithValue("@password", password);
-
-            int newUserId = Convert.ToInt32(cmd.ExecuteScalar());
+            int newUserId = QueryHelper.ExecuteScalar<int>(insertQuery,
+                new MySqlParameter("@username", username),
+                new MySqlParameter("@password", password));
 
             if (newUserId > 0) // if its less, query did nothing, so it failed.
             {

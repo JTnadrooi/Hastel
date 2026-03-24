@@ -26,6 +26,14 @@
 
             <div>
                 <h3>Input</h3>
+                <div>
+                    <textarea
+                        id="scriptName"
+                        rows="1"
+                        cols="80"
+                        placeholder="Enter your script's name here..."
+                    ></textarea>
+                </div>
                 <textarea
                     id="input"
                     rows="12"
@@ -44,6 +52,27 @@
                     readonly
                     placeholder="Results will appear here..."
                 ></textarea>
+            </div>
+
+            <div>
+                <h3>Actions</h3>
+
+                <div>
+                    <div>
+                        <button onclick="saveScript()">Save</button>
+                    </div>
+                    <div>
+                        <select id="loadSelect">
+                            <option>Loading..</option>
+                        </select>
+                        <button onclick="loadScript()">Load</button>
+                    </div>
+                    <p id="scriptActionResponse"></p>
+                </div>
+
+                <div>
+                    <a href="manage-scripts.html">Manage scripts</a>
+                </div>
             </div>
         </section>
 
