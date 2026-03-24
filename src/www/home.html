@@ -61,17 +61,22 @@
                     <div>
                         <button onclick="saveScript()">Save</button>
                     </div>
-                    <div>
-                        <select id="loadSelect">
-                            <option>Loading..</option>
-                        </select>
-                        <button onclick="loadScript()">Load</button>
-                    </div>
-                    <p id="scriptActionResponse"></p>
                 </div>
 
                 <div>
-                    <a href="manage-scripts.html">Manage scripts</a>
+                    <table id="scripts">
+                        <!-- <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Age</th>
+                            </tr>
+                        </thead> -->
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+                <div>
+                    <p id="scriptActionResponse"></p>
                 </div>
             </div>
         </section>

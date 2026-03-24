@@ -73,29 +73,35 @@ async function updateLoadSelect() {
             expectJson: true
         });
 
-        const select = document.getElementById('loadSelect');
+        const tbody = document.querySelector('#scripts tbody');
 
-        select.innerHTML = '<option value="">Select a script to load...</option>';
+        tbody.innerHTML = '';
 
         scripts.forEach(script => {
-            const option = document.createElement('option');
-            option.value = script;
-            option.textContent = script;
-            select.appendChild(option);
+            const row = tbody.insertRow();
+
+            const nameCell = row.insertCell(0);
+            nameCell.textContent = script;
+
+            const loadCell = row.insertCell(1);
+            const loadButton = document.createElement('button');
+            loadButton.textContent = 'Load';
+            loadButton.onclick = () => loadScript(script);
+            loadCell.appendChild(loadButton);
+
+            const deleteCell = row.insertCell(2);
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Delete';
+            deleteButton.onclick = () => deleteScript(script);
+            deleteCell.appendChild(deleteButton);
         });
 
-        select.onchange = async function () {
-            if (this.value) {
-                await loadScript(this.value);
-                this.value = '';
-            }
-        };
     } catch (error) {
         console.error('Failed to load scripts:', error);
         UI.setResponse("scriptActionResponse", "Failed to load scripts list: " + error.message);
 
-        const select = document.getElementById('loadSelect');
-        select.innerHTML = '<option value="">Error loading scripts</option>';
+        const tbody = document.querySelector('#scripts tbody');
+        tbody.innerHTML = '';
     }
 }
 
@@ -148,8 +154,7 @@ async function saveScript() {
 }
 
 
-async function loadScript() {
-    const name = document.getElementById("loadSelect").value;
+async function loadScript(name) {
     const input = document.getElementById('input');
     const output = document.getElementById('output');
     const nameElement = document.getElementById('scriptName');
@@ -169,6 +174,29 @@ async function loadScript() {
     } catch (error) {
         UI.showError("scriptActionResponse", error);
     }
+}
+
+async function deleteScript(name) {
+    const userConfirmed = confirm(`Are you sure you want to permanently delete script "${name}"?`);
+    if (!userConfirmed) {
+        UI.setResponse("scriptActionResponse", "Delete cancelled.");
+        return;
+    }
+
+    try {
+        const data = await API.request("/scripts/delete-script", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name }),
+            expectJson: false,
+        });
+
+        UI.setResponse("scriptActionResponse", "Script deleted successfully!");
+    } catch (error) {
+        UI.showError("scriptActionResponse", error);
+    }
+
+    await updateLoadSelect();
 }
 
 document.addEventListener('DOMContentLoaded', async function () {

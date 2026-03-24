@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace Hastel.Server.CommandProviders
 {
@@ -90,6 +91,25 @@ namespace Hastel.Server.CommandProviders
             string json = JsonConvert.SerializeObject(scriptNames);
 
             return CommandWebResponse.FromString(json);
+        }
+
+        [Command(".")]
+        public void DeleteScript_POST(string name)
+        {
+            string checkQuery = "SELECT COUNT(*) FROM scripts WHERE owner_id = @owner_id AND name = @name";
+            int existingCount = QueryHelper.ExecuteScalar<int>(checkQuery,
+                new MySqlParameter("@owner_id", Program.CurrentUser!.UserId),
+                new MySqlParameter("@name", name));
+
+            if (existingCount == 0)
+            {
+                throw new WebException("Script not found", HttpStatusCode.NotFound);
+            }
+
+            string deleteQuery = "DELETE FROM scripts WHERE owner_id = @owner_id AND name = @name";
+            QueryHelper.ExecuteScalar<int>(deleteQuery,
+                new MySqlParameter("@owner_id", Program.CurrentUser!.UserId),
+                new MySqlParameter("@name", name));
         }
     }
 }
