@@ -62,7 +62,7 @@ async function parseSpellscript() {
     }
 }
 
-async function populateLoadSelect() {
+async function updateLoadSelect() {
     try {
         const username = Auth.getUser().username;
 
@@ -128,6 +128,8 @@ async function saveScript() {
     } catch (error) {
         UI.showError("scriptActionResponse", error);
     }
+
+    await updateLoadSelect();
 }
 
 
@@ -177,7 +179,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         document.getElementById('output').value = 'Error: Spellscript library failed to load';
     }
 
-    await populateLoadSelect();
+    await updateLoadSelect();
 });
 
 if (Auth.isAuthenticated()) {
